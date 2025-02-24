@@ -169,33 +169,55 @@ export default function ConsultarSaldo() {
         {/* Usage Details */}
         <View style={styles.usageContainer}>
           <Text style={styles.usageTitle}>Detalle del consumo</Text>
+          <Text style={styles.usageTitle}>Inicial : {gbInicial}</Text>
 
+          {/* Internet */}
           <Ionicons name="wifi" size={24} color="#000" />
           <Text style={styles.usageLabel}>Internet</Text>
           <ProgressBar
-            progress={4.3 / 5.5}
+            progress={Math.min(
+              restarSinRetorno(
+                datosPlan?.datos_iniciales || 0,
+                datosPlan?.datos || 0
+              ) / Math.max(datosPlan?.datos_iniciales || 1, 1),
+              1
+            )}
             color={customColors.blue}
             style={styles.progressBar}
           />
-          <Text style={styles.usageText}>4.3 GB / 5.5 GB</Text>
+          <Text style={styles.usageText}>{Totalgb}</Text>
 
+          {/* SMS */}
           <Ionicons name="chatbox" size={24} color="#000" />
           <Text style={styles.usageLabel}>SMS</Text>
           <ProgressBar
-            progress={0.3 / 5.5}
+            progress={Math.min(
+              restarSinRetorno(
+                datosPlan?.mensajes_iniciales || 0,
+                datosPlan?.mensajes || 0
+              ) / Math.max(datosPlan?.mensajes_iniciales || 1, 1),
+              1
+            )}
             color={customColors.grey}
             style={styles.progressBar}
           />
-          <Text style={styles.usageText}>0 / 1750 SMS</Text>
+          <Text style={styles.usageText}>{Mensaje}</Text>
 
+          {/* Llamadas */}
           <Ionicons name="phone-portrait-outline" size={24} color="#000" />
           <Text style={styles.usageLabel}>Llamadas</Text>
           <ProgressBar
-            progress={2.3 / 5.5}
+            progress={Math.min(
+              restarSinRetorno(
+                datosPlan?.minutos_iniciales || 0,
+                datosPlan?.minutos || 0
+              ) / Math.max(datosPlan?.minutos_iniciales || 1, 1),
+              1
+            )}
             color={customColors.green}
             style={styles.progressBar}
           />
-          <Text style={styles.usageText}>{datosPlan?.minutos_iniciales}</Text>
+          <Text style={styles.usageText}>{Llamadas}</Text>
         </View>
 
         {/* Coverage Information */}
