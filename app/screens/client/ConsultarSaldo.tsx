@@ -42,6 +42,10 @@ export default function ConsultarSaldo() {
   const params = useLocalSearchParams()
   const idUsuario = params.idUsuario ? Number(params.idUsuario) : undefined
   const idPartido = params.idPartido ? Number(params.idPartido) : undefined
+  const userName = Array.isArray(params.userName)
+    ? decodeURIComponent(params.userName[0]) // Si es un array, toma el primer elemento
+    : decodeURIComponent(params.userName || 'Usuario') // Si es string o undefined, usa un valor por defecto
+
   const urlPlan = 'https://likephone.mx/api/SaldoUsuario/'
   const getPlanes = 'https://likephone.mx/api/getPlanes'
   const Telefono = '8124447352'
@@ -141,7 +145,7 @@ export default function ConsultarSaldo() {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.username}>¡Hola!, Isai Alejandro</Text>
+        <Text style={styles.username}>¡Hola!,{userName}</Text>
 
         {/* Imagen del plan activo */}
         <View style={styles.planContainer}>

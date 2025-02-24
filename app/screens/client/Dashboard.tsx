@@ -329,6 +329,7 @@ export default function Dashboard() {
                   params: {
                     idUsuario: idUsuario.toString(),
                     idPartido: idPartido.toString(),
+                    userName: encodeURIComponent(userName), // Enviamos el nombre completo
                   },
                 })
               } else {
