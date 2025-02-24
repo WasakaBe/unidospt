@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Modal,
   TextInput,
-  Alert,
   ScrollView,
   FlatList,
   KeyboardAvoidingView,

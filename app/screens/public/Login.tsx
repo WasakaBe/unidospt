@@ -286,10 +286,14 @@ const Login: React.FC<LoginProps> = ({
             </Animated.View>
 
             <View style={login_styles.linksContainer}>
-              <TouchableOpacity onPress={onForgotPassword}>
+              <TouchableOpacity
+                onPress={() => router.push('/screens/public/PasswordRecovery')}
+              >
                 <Text style={login_styles.link}>¿Olvidaste tu contraseña?</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={onCreateAccount}>
+              <TouchableOpacity
+                onPress={() => router.push('/screens/public/Register')}
+              >
                 <Text style={login_styles.link}>Crear cuenta nueva</Text>
               </TouchableOpacity>
             </View>

@@ -42,7 +42,7 @@ const colors = {
     secondary: '#FFFFFF', // Blanco
   },
   LIKEPHONE: {
-    primary: 'blue',
+    primary: '#6363af',
   },
 }
 

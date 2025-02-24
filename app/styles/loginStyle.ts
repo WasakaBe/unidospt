@@ -133,6 +133,7 @@ const login_styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 12,
     letterSpacing: 1,
+    fontStyle: 'italic',
   },
 })
 
