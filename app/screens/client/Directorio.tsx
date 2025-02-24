@@ -85,7 +85,7 @@ export default function Directorio() {
   useEffect(() => {
     const fetchTiposServicios = async () => {
       try {
-        const response = await fetch(`${API_URL}api/services/`)
+        const response = await fetch(`${API_URL}api/services`)
         const data = await response.json()
 
         if (response.ok && Array.isArray(data)) {

@@ -143,7 +143,7 @@ export default function Noticias() {
       if (data.success) {
         setComentarios(data.comentarios)
       } else {
-        console.warn('No se encontraron comentarios')
+        console.log('No se encontraron comentarios')
       }
     } catch (error) {
       console.error('Error al obtener comentarios:', error)

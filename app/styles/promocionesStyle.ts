@@ -21,6 +21,7 @@ const promocion_styles = StyleSheet.create({
     width: '100%',
     maxWidth: 620,
     height: 250,
+    marginBottom: 20,
   },
   ticketEdge: {
     width: 20,
@@ -113,7 +114,7 @@ const promocion_styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 12,
     color: '#666',
-    width: 250,
+    width: 150,
     letterSpacing: 0.5,
   },
   ticketNumber: {
