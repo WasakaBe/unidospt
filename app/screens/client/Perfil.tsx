@@ -7,15 +7,17 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Pressable,
   StyleSheet,
+  Alert,
 } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
-
+import { API_URL } from '@env'
+import * as ImagePicker from 'expo-image-picker'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function Perfil() {
   const router = useRouter()
   const params = useLocalSearchParams()
@@ -36,9 +38,123 @@ export default function Perfil() {
     telefono: phoneNumber,
   })
 
-  const handleUpdateInfo = () => {
-    // Aquí iría la lógica para actualizar la información
-    alert('Información actualizada correctamente')
+  const [selectedImage, setSelectedImage] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
+
+  // ✅ Cargar datos del usuario desde AsyncStorage al entrar en la pantalla
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const storedUserData = await AsyncStorage.getItem('userData')
+        if (storedUserData) {
+          const parsedUserData = JSON.parse(storedUserData)
+          setUserInfo((prev) => ({
+            ...prev,
+            ...parsedUserData,
+            photoUrl: parsedUserData.photoUrl || userPhoto, // Si no hay foto en AsyncStorage, usar la predeterminada
+          }))
+        } else {
+          setUserInfo((prev) => ({ ...prev, photoUrl: userPhoto }))
+        }
+      } catch (error) {
+        console.error('❌ Error al cargar los datos del usuario:', error)
+      }
+    }
+
+    loadUserData()
+  }, [])
+
+  // ✅ Función para seleccionar una imagen
+  const handleSelectImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert('Permiso denegado', 'Se requiere acceso a la galería')
+      return
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    })
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri)
+    }
+  }
+
+  // ✅ Función para actualizar la información del usuario
+  const handleUpdateInfo = async () => {
+    if (
+      !userInfo.nombre ||
+      !userInfo.apellidoPaterno ||
+      !userInfo.apellidoMaterno ||
+      !userInfo.email
+    ) {
+      Alert.alert('Error', 'Todos los campos son obligatorios')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('id', idUsuario!.toString())
+      formData.append('nombre', userInfo.nombre)
+      formData.append('apellido_paterno', userInfo.apellidoPaterno)
+      formData.append('apellido_materno', userInfo.apellidoMaterno)
+      formData.append('correo', userInfo.email)
+
+      if (selectedImage) {
+        const fileName = selectedImage.split('/').pop() || 'profile.jpg'
+        const fileType = fileName.split('.').pop() || 'jpg'
+
+        formData.append('foto_perfil', {
+          uri: selectedImage,
+          name: fileName,
+          type: `image/${fileType}`,
+        } as any)
+      }
+
+      const response = await fetch(`${API_URL}api/userspartido/update`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Error al actualizar el perfil')
+      }
+
+      // 🔹 Guardar los datos actualizados en AsyncStorage
+      const updatedUserData = {
+        ...userInfo,
+        photoUrl: selectedImage || userInfo.photoUrl,
+      }
+      await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData))
+
+      // 🔹 Actualizar el estado local inmediatamente
+      setUserInfo(updatedUserData)
+
+      Alert.alert('Éxito', 'Información actualizada correctamente')
+
+      // 🔹 Actualizar foto en la interfaz
+      if (selectedImage) {
+        setUserInfo((prev) => ({ ...prev, photoUrl: selectedImage }))
+      }
+    } catch (error: unknown) {
+      let errorMessage = 'Hubo un problema con la actualización'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+
+      Alert.alert('Error', errorMessage)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -57,7 +173,7 @@ export default function Perfil() {
             <Text style={noticias_styles.backText}>Regresar</Text>
           </TouchableOpacity>
 
-          <Text style={noticias_styles.tituloNoticia}>Perfil</Text>
+          <Text style={noticias_styles.tituloNoticia}>Perfil </Text>
 
           {/* Logo del Partido */}
           <Image
@@ -69,10 +185,13 @@ export default function Perfil() {
         <View style={styles.header}>
           <View style={styles.photoContainer}>
             <Image
-              source={{ uri: userInfo.photoUrl }}
+              source={{ uri: selectedImage || userInfo.photoUrl }}
               style={styles.profilePhoto}
             />
-            <TouchableOpacity style={styles.editPhotoButton}>
+            <TouchableOpacity
+              style={styles.editPhotoButton}
+              onPress={handleSelectImage}
+            >
               <MaterialIcons name="photo-camera" size={20} color="white" />
             </TouchableOpacity>
           </View>
@@ -137,10 +256,14 @@ export default function Perfil() {
           </View>
 
           <TouchableOpacity
-            style={styles.updateButton}
+            style={[styles.updateButton, loading && { opacity: 0.6 }]}
             onPress={handleUpdateInfo}
+            disabled={loading}
           >
-            <Text style={styles.updateButtonText}>Actualizar Información</Text>
+            <Text style={styles.updateButtonText}>
+              {' '}
+              {loading ? 'Actualizando...' : 'Actualizar Información'}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

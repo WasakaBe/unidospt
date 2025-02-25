@@ -222,9 +222,7 @@ export default function Directorio() {
                       {item.nombre} {item.apellido_paterno || ''}{' '}
                       {item.apellido_materno || ''}
                     </Text>
-                    <Text style={directorio_styles.serviceDescription}>
-                      {item.descripcion || 'Descripción no disponible'}
-                    </Text>
+
                     <Text style={directorio_styles.serviceDescription}>
                       {item.direccion_usuario || 'Dirección no disponible'}
                     </Text>

@@ -59,6 +59,7 @@ const directorio_styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 12,
+    width: '100%',
   },
   contactInfo: {
     flexDirection: 'row',

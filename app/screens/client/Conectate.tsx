@@ -493,13 +493,19 @@ export default function Conectate() {
           <Text style={noticias_styles.backText}>Regresar</Text>
         </TouchableOpacity>
         <Text style={noticias_styles.tituloNoticia}>Conéctate</Text>
-      </View>
 
+        {/* Logo del Partido */}
+        <Image
+          source={require('../../assets/logo_partidos/unidosPt.png')}
+          style={noticias_styles.logo}
+        />
+      </View>
+      {/* Botón flotante "Crear post" */}
       <TouchableOpacity
-        style={styles.createPostButton}
+        style={reporte_styles.createReportButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.createPostText}>Crear Post </Text>
+        <Text style={reporte_styles.createReportButtonText}>Crear Post </Text>
       </TouchableOpacity>
 
       <FlatList
@@ -525,6 +531,8 @@ export default function Conectate() {
           ) : null
         }
       />
+
+      {/* Modal de new post */}
 
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={reporte_styles.modalOverlay}>

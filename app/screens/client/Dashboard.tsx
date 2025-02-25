@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import getLogoByIdPartido from '@/app/constants/logoPartidos'
 import colors from '@/app/constants/colors'
@@ -71,6 +71,28 @@ export default function Dashboard() {
 
     fetchUserData()
   }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUserData = async () => {
+        try {
+          const storedUserData = await AsyncStorage.getItem('userData')
+
+          if (storedUserData) {
+            const parsedUserData = JSON.parse(storedUserData)
+            setUserName(
+              `${parsedUserData.nombre} ${parsedUserData.apellidoPaterno} ${parsedUserData.apellidoMaterno}`
+            )
+            setUserPhoto(parsedUserData.photoUrl)
+          }
+        } catch (error) {
+          console.error('❌ Error al cargar datos actualizados:', error)
+        }
+      }
+
+      fetchUserData()
+    }, []) // Se ejecuta cuando el Dashboard vuelve a estar en foco
+  )
 
   if (loading) {
     return (

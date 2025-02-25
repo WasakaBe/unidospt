@@ -28,6 +28,23 @@ import { LinearGradient } from 'expo-linear-gradient'
 import Banners from '@/app/components/banners'
 import CustomModal from '@/app/components/customModal'
 
+interface Noticia {
+  NoticiaID: number
+  Titulo: string
+  Descripcion: string
+  ImagenesAsociadas: string[]
+  TipoNoticia: string
+  NombrePartido: string
+  TotalComentarios: number
+  TotalReacciones: number
+  reacciones?: Reaccion[] // 🔹 Se tipa explícitamente
+}
+
+interface Reaccion {
+  id_usuario: number
+  tipo_reaccion: string
+}
+
 export default function Noticias() {
   const router = useRouter() // ✅ Reemplazo de `navigation`
   const params = useLocalSearchParams()
@@ -35,7 +52,7 @@ export default function Noticias() {
   const idPartido = params.idPartido ? Number(params.idPartido) : undefined
 
   const [loading, setLoading] = useState<boolean>(true)
-  const [noticias, setNoticias] = useState<any[]>([])
+  const [noticias, setNoticias] = useState<Noticia[]>([])
   const [page, setPage] = useState<number>(1)
   const limit = 10
 
@@ -213,12 +230,15 @@ export default function Noticias() {
       return
     }
 
-    // Verifica si el usuario ya reaccionó a esta noticia
-    if (reaccionesUsuario[noticiaId]) {
-      // Mostrar el modal si ya ha reaccionado
-      setModalType('error')
-      setModalMessage('Ya has reaccionado a esta noticia.')
-      setCustomModalVisible(true)
+    const tipo_reaccion = 'meencanta' // Se puede cambiar según el tipo de reacción
+
+    // Verificar si el usuario ya reaccionó
+    const noticia = noticias.find((n) => n.NoticiaID === noticiaId)
+    if (
+      noticia &&
+      noticia.reacciones?.some((r: Reaccion) => r.id_usuario === idUsuario)
+    ) {
+      console.log('El usuario ya ha reaccionado a esta publicación.')
       return
     }
 
@@ -228,7 +248,7 @@ export default function Noticias() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tipo_reaccion: 'love' }),
+          body: JSON.stringify({ tipo_reaccion }),
         }
       )
 
@@ -241,26 +261,25 @@ export default function Noticias() {
         return
       }
 
-      // Actualizar el estado de noticias y marcar que el usuario ya reaccionó
+      // Actualizar estado localmente
       setNoticias((prevNoticias) =>
         prevNoticias.map((noticia) =>
           noticia.NoticiaID === noticiaId
-            ? { ...noticia, TotalReacciones: data.totalReacciones }
+            ? {
+                ...noticia,
+                reacciones: [
+                  ...(noticia.reacciones || []),
+                  { tipo_reaccion, id_usuario: idUsuario },
+                ],
+                TotalReacciones: (noticia.TotalReacciones || 0) + 1,
+              }
             : noticia
         )
       )
-
-      // Marcar esta noticia como reaccionada por el usuario
-      setReaccionesUsuario((prev) => ({ ...prev, [noticiaId]: true }))
       // Mostrar el modal de éxito
-      setModalType('success')
-      setModalMessage('¡Has reaccionado con éxito!')
-      setCustomModalVisible(true)
+      console.log('Reacción registrada o actualizada:', data.message)
     } catch (error) {
-      console.error('❌ Error al registrar la reacción:', error)
-      setModalType('error')
-      setModalMessage('Error al procesar la reacción.')
-      setCustomModalVisible(true)
+      console.log('❌ Error al registrar la reacción:', error)
     }
   }
 
@@ -374,21 +393,25 @@ export default function Noticias() {
                       style={noticias_styles.interactionButton}
                       onPress={() => handleReaction(item.NoticiaID)}
                     >
-                      <Ionicons
+                      <FontAwesome
                         name={
-                          reaccionesUsuario[item.NoticiaID]
+                          item.reacciones?.some(
+                            (r: Reaccion) => r.id_usuario === idUsuario
+                          )
                             ? 'heart'
-                            : 'heart-outline'
+                            : 'heart-o'
                         } // Si reaccionó, cambia el icono
                         size={22}
                         color={
-                          reaccionesUsuario[item.NoticiaID]
-                            ? '#E74C3C'
-                            : '#E74C3C'
-                        } // Si reaccionó, el icono es rojo relleno
+                          item.reacciones?.some(
+                            (r: Reaccion) => r.id_usuario === idUsuario
+                          )
+                            ? '#007BFF'
+                            : '#000'
+                        } // Si reaccionó, cambia el color
                       />
                       <Text style={noticias_styles.interactionText}>
-                        {item.TotalReacciones}
+                        {item.TotalReacciones || 0} Me Encanta
                       </Text>
                     </TouchableOpacity>
                   </View>
