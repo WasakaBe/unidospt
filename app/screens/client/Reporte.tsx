@@ -14,14 +14,15 @@ import { useRouter, useLocalSearchParams } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import LoadingSpinner from '@/app/components/loadingSpinner'
 import Banners from '@/app/components/banners'
+import { Picker } from '@react-native-picker/picker'
+import MapView, { Marker } from 'react-native-maps'
+import CustomModal from '@/app/components/customModal'
+import useMediaAndLocation from '@/app/hooks/useMediaAndLocation'
+
+//styles
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
 import reporte_styles from '@/app/styles/reporteStyle'
-import { Picker } from '@react-native-picker/picker'
-import * as Location from 'expo-location'
-import * as ImagePicker from 'expo-image-picker'
-import MapView, { Marker } from 'react-native-maps'
-import CustomModal from '@/app/components/customModal'
 
 import {
   FontAwesome,
@@ -42,11 +43,6 @@ interface Reporte {
   id_dependencia: string
 }
 
-interface LocationData {
-  latitude: number
-  longitude: number
-}
-
 export default function Reporte() {
   const router = useRouter() // ✅ Reemplazo de `navigation`
   const params = useLocalSearchParams()
@@ -60,6 +56,16 @@ export default function Reporte() {
   const isFetchingRef = useRef(false) // Estado de llamada en curso
   const lastFetchTime = useRef(Date.now()) // Última vez que se hizo la llamada
 
+  const {
+    selectedImage,
+    setSelectedImage,
+    location,
+    setLocation,
+    handleTakePhoto,
+    handleSelectImage,
+    handleGetLocation,
+  } = useMediaAndLocation()
+
   const [modalVisible, setModalVisible] = useState(false)
   const [manualModalVisible, setManualModalVisible] = useState(false) // Nueva modal para reporte manual
   const [latitud, setLatitud] = useState('')
@@ -67,10 +73,8 @@ export default function Reporte() {
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   const [department, setDepartment] = useState('aseo')
-  const [location, setLocation] = useState<LocationData | null>(null)
 
   const [departments, setDepartments] = useState<
     { label: string; value: string }[]
@@ -156,67 +160,6 @@ export default function Reporte() {
 
   const onClose = () => {
     setModalVisible(false)
-  }
-
-  // Función para tomar una foto
-  const handleTakePhoto = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync()
-    if (status !== 'granted') {
-      alert('Se requiere acceso a la cámara para tomar fotos.')
-      return
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
-    }
-  }
-
-  // Función para seleccionar una imagen de la galería
-  const handleSelectImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (status !== 'granted') {
-      alert('Se requiere acceso a la galería para seleccionar imágenes.')
-      return
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
-    }
-  }
-
-  const handleGetLocation = async () => {
-    // Solicitar permisos para acceder a la ubicación
-    const { status } = await Location.requestForegroundPermissionsAsync()
-
-    if (status !== 'granted') {
-      alert(
-        'Se requiere acceso a la ubicación para obtener la posición actual.'
-      )
-      return
-    }
-
-    // Obtener la ubicación actual
-    const locationResult = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.High,
-    })
-
-    // Actualizar el estado con la ubicación obtenida
-    setLocation({
-      latitude: locationResult.coords.latitude,
-      longitude: locationResult.coords.longitude,
-    })
   }
 
   const handleCreateReport = async () => {

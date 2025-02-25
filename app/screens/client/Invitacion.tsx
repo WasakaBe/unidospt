@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ImageBackground,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Image,
@@ -13,7 +12,6 @@ import {
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { API_URL } from '@env'
-import noticias_styles from '@/app/styles/noticiasStyle'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import {
   validateEmail,
@@ -21,7 +19,9 @@ import {
   validatePhone,
 } from '@/app/constants/validations'
 import CustomModal from '@/app/components/customModal'
-
+//styles
+import noticias_styles from '@/app/styles/noticiasStyle'
+import invitacion_styles from '@/app/styles/invitacion'
 export default function Invitacion() {
   const router = useRouter()
   const params = useLocalSearchParams()
@@ -101,7 +101,7 @@ export default function Invitacion() {
   return (
     <ImageBackground
       source={getBackgroundByIdPartido(Number(idPartido))}
-      style={styles.background}
+      style={invitacion_styles.background}
     >
       {/* Modal de notificación */}
       <CustomModal
@@ -121,33 +121,43 @@ export default function Invitacion() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.container}>
+      <View style={invitacion_styles.container}>
         {/* Logo */}
         <Image
           source={require('../../assets/logo_partidos/unidosPt.png')}
-          style={styles.logo}
+          style={invitacion_styles.logo}
         />
 
         {/* Título */}
-        <Text style={styles.title}>
+        <Text style={invitacion_styles.title}>
           ¡Invita a tus familiares y amigos a formar parte!
         </Text>
 
         {/* Campos del formulario */}
-        <View style={styles.inputContainer}>
-          <Ionicons name="person" size={24} color="#999" style={styles.icon} />
+        <View style={invitacion_styles.inputContainer}>
+          <Ionicons
+            name="person"
+            size={24}
+            color="#999"
+            style={invitacion_styles.icon}
+          />
           <TextInput
-            style={styles.input}
+            style={invitacion_styles.input}
             placeholder="Nombre Completo"
             placeholderTextColor="#999"
             value={nombre}
             onChangeText={setNombre}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Ionicons name="call" size={24} color="#999" style={styles.icon} />
+        <View style={invitacion_styles.inputContainer}>
+          <Ionicons
+            name="call"
+            size={24}
+            color="#999"
+            style={invitacion_styles.icon}
+          />
           <TextInput
-            style={styles.input}
+            style={invitacion_styles.input}
             placeholder="Teléfono"
             placeholderTextColor="#999"
             keyboardType="phone-pad"
@@ -155,15 +165,15 @@ export default function Invitacion() {
             onChangeText={setTelefono}
           />
         </View>
-        <View style={styles.inputContainer}>
+        <View style={invitacion_styles.inputContainer}>
           <MaterialIcons
             name="email"
             size={24}
             color="#999"
-            style={styles.icon}
+            style={invitacion_styles.icon}
           />
           <TextInput
-            style={styles.input}
+            style={invitacion_styles.input}
             placeholder="Correo Electrónico"
             placeholderTextColor="#999"
             keyboardType="email-address"
@@ -174,19 +184,19 @@ export default function Invitacion() {
 
         {/* Botón enviar */}
         <TouchableOpacity
-          style={styles.button}
+          style={invitacion_styles.button}
           onPress={handleEnviar}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>ENVIAR</Text>
+            <Text style={invitacion_styles.buttonText}>ENVIAR</Text>
           )}
         </TouchableOpacity>
 
         {/* Nota */}
-        <Text style={styles.note}>
+        <Text style={invitacion_styles.note}>
           *Estoy de acuerdo en enviar la información de contacto de mi
           familiar/amigo para que sea contactado y se invite a realizar el
           proceso de afiliación.
@@ -195,65 +205,3 @@ export default function Invitacion() {
     </ImageBackground>
   )
 }
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  logo: {
-    width: 250,
-    marginBottom: 20,
-    resizeMode: 'contain',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    width: '100%',
-  },
-  icon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-    paddingVertical: 10,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: '#000',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  note: {
-    fontSize: 12,
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 10,
-  },
-})

@@ -4,7 +4,6 @@ import {
   Text,
   ImageBackground,
   ScrollView,
-  StyleSheet,
   Image,
   TouchableOpacity,
   Alert,
@@ -20,6 +19,9 @@ import {
   restarSinRetorno,
 } from '@/app/constants/functions'
 import LoadingSpinner from '@/app/components/loadingSpinner'
+//styles
+import consulta_saldo_styles from '@/app/styles/consultarSaldoStyle'
+
 const customColors = {
   blue: '#007bff',
   grey: '#6c757d',
@@ -135,34 +137,43 @@ export default function ConsultarSaldo() {
   return (
     <ImageBackground
       source={getBackgroundByIdPartido(Number(idPartido))}
-      style={styles.background}
+      style={consulta_saldo_styles.background}
     >
-      <ScrollView style={styles.container}>
+      <ScrollView style={consulta_saldo_styles.container}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={consulta_saldo_styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.username}>¡Hola!,{userName}</Text>
+        <Text style={consulta_saldo_styles.username}>¡Hola!,{userName}</Text>
 
         {/* Imagen del plan activo */}
-        <View style={styles.planContainer}>
-          <Image source={{ uri: urlImagen }} style={styles.bannerLike} />
+        <View style={consulta_saldo_styles.planContainer}>
+          <Image
+            source={{ uri: urlImagen }}
+            style={consulta_saldo_styles.bannerLike}
+          />
         </View>
 
         {/* Expiration Info */}
-        <View style={styles.expirationContainer}>
-          <Text style={styles.expirationTitle}>Fecha que expira el plan</Text>
-          <View style={styles.expirationDetails}>
-            <View style={styles.expirationsubDetails}>
-              <Text style={styles.date}>{fechaFormateada.day}</Text>
-              <Text style={styles.month}>{fechaFormateada.monthYear}</Text>
+        <View style={consulta_saldo_styles.expirationContainer}>
+          <Text style={consulta_saldo_styles.expirationTitle}>
+            Fecha que expira el plan
+          </Text>
+          <View style={consulta_saldo_styles.expirationDetails}>
+            <View style={consulta_saldo_styles.expirationsubDetails}>
+              <Text style={consulta_saldo_styles.date}>
+                {fechaFormateada.day}
+              </Text>
+              <Text style={consulta_saldo_styles.month}>
+                {fechaFormateada.monthYear}
+              </Text>
             </View>
-            <View style={styles.expirationsubDetails}>
-              <Text style={styles.date}>{diasRestantes}</Text>
-              <Text style={styles.month}>
+            <View style={consulta_saldo_styles.expirationsubDetails}>
+              <Text style={consulta_saldo_styles.date}>{diasRestantes}</Text>
+              <Text style={consulta_saldo_styles.month}>
                 {' '}
                 {diasRestantes === 1 ? 'Día' : 'Días'}
               </Text>
@@ -171,13 +182,17 @@ export default function ConsultarSaldo() {
         </View>
 
         {/* Usage Details */}
-        <View style={styles.usageContainer}>
-          <Text style={styles.usageTitle}>Detalle del consumo</Text>
-          <Text style={styles.usageTitle}>Inicial : {gbInicial}</Text>
+        <View style={consulta_saldo_styles.usageContainer}>
+          <Text style={consulta_saldo_styles.usageTitle}>
+            Detalle del consumo
+          </Text>
+          <Text style={consulta_saldo_styles.usageTitle}>
+            Inicial : {gbInicial}
+          </Text>
 
           {/* Internet */}
           <Ionicons name="wifi" size={24} color="#000" />
-          <Text style={styles.usageLabel}>Internet</Text>
+          <Text style={consulta_saldo_styles.usageLabel}>Internet</Text>
           <ProgressBar
             progress={Math.min(
               restarSinRetorno(
@@ -187,13 +202,13 @@ export default function ConsultarSaldo() {
               1
             )}
             color={customColors.blue}
-            style={styles.progressBar}
+            style={consulta_saldo_styles.progressBar}
           />
-          <Text style={styles.usageText}>{Totalgb}</Text>
+          <Text style={consulta_saldo_styles.usageText}>{Totalgb}</Text>
 
           {/* SMS */}
           <Ionicons name="chatbox" size={24} color="#000" />
-          <Text style={styles.usageLabel}>SMS</Text>
+          <Text style={consulta_saldo_styles.usageLabel}>SMS</Text>
           <ProgressBar
             progress={Math.min(
               restarSinRetorno(
@@ -203,13 +218,13 @@ export default function ConsultarSaldo() {
               1
             )}
             color={customColors.grey}
-            style={styles.progressBar}
+            style={consulta_saldo_styles.progressBar}
           />
-          <Text style={styles.usageText}>{Mensaje}</Text>
+          <Text style={consulta_saldo_styles.usageText}>{Mensaje}</Text>
 
           {/* Llamadas */}
           <Ionicons name="phone-portrait-outline" size={24} color="#000" />
-          <Text style={styles.usageLabel}>Llamadas</Text>
+          <Text style={consulta_saldo_styles.usageLabel}>Llamadas</Text>
           <ProgressBar
             progress={Math.min(
               restarSinRetorno(
@@ -219,14 +234,14 @@ export default function ConsultarSaldo() {
               1
             )}
             color={customColors.green}
-            style={styles.progressBar}
+            style={consulta_saldo_styles.progressBar}
           />
-          <Text style={styles.usageText}>{Llamadas}</Text>
+          <Text style={consulta_saldo_styles.usageText}>{Llamadas}</Text>
         </View>
 
         {/* Coverage Information */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
+        <View style={consulta_saldo_styles.footer}>
+          <Text style={consulta_saldo_styles.footerText}>
             Llamadas y SMS con Cobertura Nacional, Estados Unidos y Canadá
           </Text>
         </View>
@@ -234,114 +249,3 @@ export default function ConsultarSaldo() {
     </ImageBackground>
   )
 }
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  bannerLike: {
-    width: 400,
-    height: 200,
-    objectFit: 'fill',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  username: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
-    marginTop: 16,
-    paddingLeft: 10,
-    paddingRight: 10,
-    textAlign: 'center',
-  },
-  planContainer: {
-    alignItems: 'center',
-    marginVertical: 16,
-    backgroundColor: '#7f7ff183',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 16,
-  },
-  expirationContainer: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 16,
-    elevation: 3,
-  },
-  expirationTitle: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: 8,
-    fontSize: 24,
-  },
-  expirationDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  expirationsubDetails: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  date: {
-    fontSize: 30,
-    color: 'blue',
-    fontWeight: 'bold',
-  },
-  month: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  daysLeft: {
-    fontSize: 22,
-    color: 'blue',
-    fontWeight: 'bold',
-  },
-  usageContainer: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 16,
-    elevation: 3,
-  },
-  usageTitle: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  usageLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  progressBar: {
-    height: 10,
-    borderRadius: 5,
-    marginVertical: 5,
-  },
-  usageText: {
-    fontSize: 14,
-    textAlign: 'right',
-    color: '#777',
-  },
-  footer: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 10,
-    elevation: 3,
-  },
-  footerText: {
-    textAlign: 'center',
-    fontWeight: '400',
-    fontSize: 20,
-  },
-})

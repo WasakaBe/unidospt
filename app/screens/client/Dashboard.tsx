@@ -10,12 +10,15 @@ import { useFocusEffect, useRouter } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import getLogoByIdPartido from '@/app/constants/logoPartidos'
 import colors from '@/app/constants/colors'
-import dashboard_styles from '@/app/styles/dashboardStyle'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { decode as atob } from 'base-64'
 import LoadingSpinner from '@/app/components/loadingSpinner'
 import Banners from '@/app/components/banners'
 import HamburgerMenu from '@/app/components/HamburgerMenu'
+
+//styles
+import dashboard_styles from '@/app/styles/dashboardStyle'
+
 export default function Dashboard() {
   const router = useRouter()
   const [userData, setUserData] = useState<any>(null)

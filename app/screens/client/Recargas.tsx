@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import {
   FlatList,
   View,
-  StyleSheet,
-  ActivityIndicator,
   Alert,
   Text,
   TouchableOpacity,
@@ -14,9 +12,11 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router' // ✅ Reemplazo de navigation
 import CardPlan from '@/app/components/cardPlan'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
-import noticias_styles from '@/app/styles/noticiasStyle'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
-
+//styles
+import noticias_styles from '@/app/styles/noticiasStyle'
+import recarga_styles from '@/app/styles/recargasStyle'
+import LoadingSpinner from '@/app/components/loadingSpinner'
 interface Plan {
   cv_plan: number
   imagen_movil1: string
@@ -106,8 +106,8 @@ export default function Recargas() {
 
   if (loading) {
     return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#007BFF" />
+      <View style={recarga_styles.loaderContainer}>
+        <LoadingSpinner text="Cargando recargas...." color="#007BFF" />
       </View>
     )
   }
@@ -115,7 +115,7 @@ export default function Recargas() {
   return (
     <ImageBackground
       source={getBackgroundByIdPartido(Number(idPartido))}
-      style={styles.container}
+      style={recarga_styles.container}
     >
       <View style={noticias_styles.subcontainer}>
         {/* Botón de regresar */}
@@ -129,21 +129,23 @@ export default function Recargas() {
       </View>
 
       {/* Selector de destinatarios */}
-      <View style={styles.rechargeContainer}>
-        <Text style={styles.rechargeText}>¿A quién le harás recarga?</Text>
-        <View style={styles.selectorRow}>
+      <View style={recarga_styles.rechargeContainer}>
+        <Text style={recarga_styles.rechargeText}>
+          ¿A quién le harás recarga?
+        </Text>
+        <View style={recarga_styles.selectorRow}>
           <TouchableOpacity
-            style={styles.pickerContainer}
+            style={recarga_styles.pickerContainer}
             onPress={toggleModal}
           >
-            <Text style={styles.pickerText}>
+            <Text style={recarga_styles.pickerText}>
               {recipients.find((r) => r.value === selectedRecipient)?.label ||
                 'Seleccionar destinatario'}
             </Text>
             <Ionicons name="chevron-down-outline" size={20} color="#333" />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.addButton}
+            style={recarga_styles.addButton}
             onPress={handleAddRecipient}
           >
             <Ionicons name="add-circle-outline" size={24} color="#007BFF" />
@@ -158,19 +160,21 @@ export default function Recargas() {
         animationType="fade"
         onRequestClose={toggleModal}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <View style={recarga_styles.modalOverlay}>
+          <View style={recarga_styles.modalContent}>
             <ScrollView>
               {recipients.map((recipient, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.modalItem}
+                  style={recarga_styles.modalItem}
                   onPress={() => {
                     setSelectedRecipient(recipient.value)
                     toggleModal()
                   }}
                 >
-                  <Text style={styles.modalItemText}>{recipient.label}</Text>
+                  <Text style={recarga_styles.modalItemText}>
+                    {recipient.label}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -188,87 +192,8 @@ export default function Recargas() {
             onViewDetails={(plan) => console.log('Detalles del plan:', plan)}
           />
         )}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={recarga_styles.listContainer}
       />
     </ImageBackground>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F0F0',
-    padding: 20,
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  listContainer: {
-    paddingHorizontal: 10,
-  },
-  rechargeContainer: {
-    padding: 20,
-    backgroundColor: '#FFF',
-    marginBottom: 10,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  rechargeText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  selectorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  pickerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#DDD',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    height: 40,
-    backgroundColor: '#FFF',
-  },
-  pickerText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  addButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    width: '80%',
-    maxHeight: '60%',
-    padding: 15,
-  },
-  modalItem: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEE',
-  },
-  modalItemText: {
-    fontSize: 16,
-    color: '#333',
-  },
-})

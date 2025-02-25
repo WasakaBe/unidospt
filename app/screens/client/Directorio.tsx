@@ -9,15 +9,17 @@ import {
   Linking,
 } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
-import dashboard_styles from '@/app/styles/dashboardStyle'
-import noticias_styles from '@/app/styles/noticiasStyle'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
-import directorio_styles from '@/app/styles/directorioStyle'
 import Banners from '@/app/components/banners'
 import { API_URL } from '@env'
 import LoadingSpinner from '@/app/components/loadingSpinner'
 import CustomModal from '@/app/components/customModal'
+
+//styles
+import dashboard_styles from '@/app/styles/dashboardStyle'
+import noticias_styles from '@/app/styles/noticiasStyle'
+import directorio_styles from '@/app/styles/directorioStyle'
 interface TipoServicio {
   id: number
   nombre: string

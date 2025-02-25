@@ -14,10 +14,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
+import perfil_styles from '@/app/styles/perfilStyle'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { API_URL } from '@env'
-import * as ImagePicker from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import CustomModal from '@/app/components/customModal'
+import useMediaAndLocation from '@/app/hooks/useMediaAndLocation'
 export default function Perfil() {
   const router = useRouter()
   const params = useLocalSearchParams()
@@ -38,8 +40,15 @@ export default function Perfil() {
     telefono: phoneNumber,
   })
 
-  const [selectedImage, setSelectedImage] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+
+  // Estado para el CustomModal
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalType, setModalType] = useState<'success' | 'error'>('success')
+  const [modalMessage, setModalMessage] = useState('')
+
+  // Hook para manejar imágenes
+  const { selectedImage, handleSelectImage } = useMediaAndLocation()
 
   // ✅ Cargar datos del usuario desde AsyncStorage al entrar en la pantalla
   useEffect(() => {
@@ -64,25 +73,6 @@ export default function Perfil() {
     loadUserData()
   }, [])
 
-  // ✅ Función para seleccionar una imagen
-  const handleSelectImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (status !== 'granted') {
-      Alert.alert('Permiso denegado', 'Se requiere acceso a la galería')
-      return
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
-    }
-  }
-
   // ✅ Función para actualizar la información del usuario
   const handleUpdateInfo = async () => {
     if (
@@ -91,7 +81,9 @@ export default function Perfil() {
       !userInfo.apellidoMaterno ||
       !userInfo.email
     ) {
-      Alert.alert('Error', 'Todos los campos son obligatorios')
+      setModalType('error')
+      setModalMessage('Todos los campos son obligatorios')
+      setModalVisible(true)
       return
     }
 
@@ -125,7 +117,7 @@ export default function Perfil() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || 'Error al actualizar el perfil')
+        console.log(data.message || 'Error al actualizar el perfil')
       }
 
       // 🔹 Guardar los datos actualizados en AsyncStorage
@@ -138,7 +130,10 @@ export default function Perfil() {
       // 🔹 Actualizar el estado local inmediatamente
       setUserInfo(updatedUserData)
 
-      Alert.alert('Éxito', 'Información actualizada correctamente')
+      // 🔥 Mostrar modal de éxito
+      setModalType('success')
+      setModalMessage('Información actualizada correctamente')
+      setModalVisible(true)
 
       // 🔹 Actualizar foto en la interfaz
       if (selectedImage) {
@@ -151,7 +146,7 @@ export default function Perfil() {
         errorMessage = error.message
       }
 
-      Alert.alert('Error', errorMessage)
+      console.log('Error', errorMessage)
     } finally {
       setLoading(false)
     }
@@ -162,7 +157,7 @@ export default function Perfil() {
       source={getBackgroundByIdPartido(Number(idPartido))}
       style={dashboard_styles.background}
     >
-      <ScrollView style={styles.container}>
+      <ScrollView style={perfil_styles.container}>
         <View style={noticias_styles.subcontainer}>
           {/* Botón de regresar */}
           <TouchableOpacity
@@ -182,14 +177,14 @@ export default function Perfil() {
           />
         </View>
 
-        <View style={styles.header}>
-          <View style={styles.photoContainer}>
+        <View style={perfil_styles.header}>
+          <View style={perfil_styles.photoContainer}>
             <Image
               source={{ uri: selectedImage || userInfo.photoUrl }}
-              style={styles.profilePhoto}
+              style={perfil_styles.profilePhoto}
             />
             <TouchableOpacity
-              style={styles.editPhotoButton}
+              style={perfil_styles.editPhotoButton}
               onPress={handleSelectImage}
             >
               <MaterialIcons name="photo-camera" size={20} color="white" />
@@ -197,13 +192,13 @@ export default function Perfil() {
           </View>
         </View>
 
-        <View style={styles.formContainer}>
-          <Text style={styles.sectionTitle}>Información Personal</Text>
+        <View style={perfil_styles.formContainer}>
+          <Text style={perfil_styles.sectionTitle}>Información Personal</Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nombre</Text>
+          <View style={perfil_styles.inputGroup}>
+            <Text style={perfil_styles.label}>Nombre</Text>
             <TextInput
-              style={styles.input}
+              style={perfil_styles.input}
               value={userInfo.nombre}
               onChangeText={(text) =>
                 setUserInfo({ ...userInfo, nombre: text })
@@ -211,10 +206,10 @@ export default function Perfil() {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Apellido Paterno</Text>
+          <View style={perfil_styles.inputGroup}>
+            <Text style={perfil_styles.label}>Apellido Paterno</Text>
             <TextInput
-              style={styles.input}
+              style={perfil_styles.input}
               value={userInfo.apellidoPaterno}
               onChangeText={(text) =>
                 setUserInfo({ ...userInfo, apellidoPaterno: text })
@@ -222,10 +217,10 @@ export default function Perfil() {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Apellido Materno</Text>
+          <View style={perfil_styles.inputGroup}>
+            <Text style={perfil_styles.label}>Apellido Materno</Text>
             <TextInput
-              style={styles.input}
+              style={perfil_styles.input}
               value={userInfo.apellidoMaterno}
               onChangeText={(text) =>
                 setUserInfo({ ...userInfo, apellidoMaterno: text })
@@ -233,20 +228,20 @@ export default function Perfil() {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Correo Electrónico</Text>
+          <View style={perfil_styles.inputGroup}>
+            <Text style={perfil_styles.label}>Correo Electrónico</Text>
             <TextInput
-              style={styles.input}
+              style={perfil_styles.input}
               value={userInfo.email}
               keyboardType="email-address"
               onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Teléfono</Text>
+          <View style={perfil_styles.inputGroup}>
+            <Text style={perfil_styles.label}>Teléfono</Text>
             <TextInput
-              style={styles.input}
+              style={perfil_styles.input}
               value={userInfo.telefono}
               keyboardType="phone-pad"
               onChangeText={(text) =>
@@ -256,99 +251,25 @@ export default function Perfil() {
           </View>
 
           <TouchableOpacity
-            style={[styles.updateButton, loading && { opacity: 0.6 }]}
+            style={[perfil_styles.updateButton, loading && { opacity: 0.6 }]}
             onPress={handleUpdateInfo}
             disabled={loading}
           >
-            <Text style={styles.updateButtonText}>
+            <Text style={perfil_styles.updateButtonText}>
               {' '}
               {loading ? 'Actualizando...' : 'Actualizar Información'}
             </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* ✅ Custom Modal */}
+      <CustomModal
+        visible={modalVisible}
+        type={modalType}
+        message={modalMessage}
+        onClose={() => setModalVisible(false)}
+      />
     </ImageBackground>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  photoContainer: {
-    position: 'relative',
-    backgroundColor: 'white',
-    borderRadius: 60,
-  },
-  profilePhoto: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
-    borderColor: '#fff',
-  },
-  editPhotoButton: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    backgroundColor: '#2196F3',
-    padding: 8,
-    borderRadius: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  formContainer: {
-    padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Fondo semitransparente
-    margin: 20,
-    borderRadius: 12,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 6,
-  },
-  input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    fontSize: 16,
-  },
-
-  updateButton: {
-    backgroundColor: '#2196F3',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  updateButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-})

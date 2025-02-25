@@ -15,8 +15,6 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { API_URL } from '@env'
 import LoadingSpinner from '@/app/components/loadingSpinner'
-import dashboard_styles from '@/app/styles/dashboardStyle'
-import noticias_styles from '@/app/styles/noticiasStyle'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
 import {
   MaterialCommunityIcons,
@@ -27,6 +25,9 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 import Banners from '@/app/components/banners'
 import CustomModal from '@/app/components/customModal'
+//styles
+import dashboard_styles from '@/app/styles/dashboardStyle'
+import noticias_styles from '@/app/styles/noticiasStyle'
 
 interface Noticia {
   NoticiaID: number

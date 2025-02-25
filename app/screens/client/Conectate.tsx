@@ -5,7 +5,6 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
-  StyleSheet,
   Modal,
   TextInput,
   ScrollView,
@@ -13,12 +12,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
-import * as ImagePicker from 'expo-image-picker'
+
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
-import dashboard_styles from '@/app/styles/dashboardStyle'
-import noticias_styles from '@/app/styles/noticiasStyle'
-import reporte_styles from '@/app/styles/reporteStyle'
 import {
   FontAwesome,
   Ionicons,
@@ -29,6 +25,12 @@ import { API_URL } from '@env'
 
 import LoadingSpinner from '@/app/components/loadingSpinner'
 import CustomModal from '@/app/components/customModal'
+import useMediaAndLocation from '@/app/hooks/useMediaAndLocation'
+//styles
+import dashboard_styles from '@/app/styles/dashboardStyle'
+import noticias_styles from '@/app/styles/noticiasStyle'
+import reporte_styles from '@/app/styles/reporteStyle'
+import conectate_styles from '@/app/styles/conectateStyle'
 
 interface Post {
   id_contenido: number
@@ -62,6 +64,13 @@ export default function Conectate() {
 
   const [loadingComentarios, setLoadingComentarios] = useState(false)
 
+  const {
+    selectedImage,
+    setSelectedImage,
+    handleTakePhoto,
+    handleSelectImage,
+  } = useMediaAndLocation()
+
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -69,7 +78,6 @@ export default function Conectate() {
   const [bannedModalVisible, setBannedModalVisible] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [postText, setPostText] = useState('')
-  const [selectedImage, setSelectedImage] = useState<any>(null)
   const limit = 10
 
   // 🔹 Estado para el modal de mensajes
@@ -155,42 +163,6 @@ export default function Conectate() {
       console.log('Error en la petición:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleTakePhoto = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync()
-    if (status !== 'granted') {
-      alert('Se requiere acceso a la cámara para tomar fotos.')
-      return
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
-    }
-  }
-
-  const handleSelectImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (status !== 'granted') {
-      alert('Se requiere acceso a la galería para seleccionar imágenes.')
-      return
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
     }
   }
 
@@ -406,9 +378,9 @@ export default function Conectate() {
           <View style={reporte_styles.statusBadge}>
             <Image
               source={{ uri: item.foto_perfil }}
-              style={styles.profileImage}
+              style={conectate_styles.profileImage}
             />
-            <Text style={styles.author}>{item.usuario}</Text>
+            <Text style={conectate_styles.author}>{item.usuario}</Text>
           </View>
           <View style={reporte_styles.typeBadge}>
             <Text style={reporte_styles.typeText}>{item.nombre_partido}</Text>
@@ -422,7 +394,7 @@ export default function Conectate() {
             />
           )}
         </View>
-        <View style={styles.postContent}>
+        <View style={conectate_styles.postContent}>
           <View style={reporte_styles.dateContainer}>
             <MaterialCommunityIcons
               name="calendar-clock"
@@ -444,9 +416,9 @@ export default function Conectate() {
         </View>
 
         {/* Iconos de Reacción y Comentario */}
-        <View style={styles.interactionContainer}>
+        <View style={conectate_styles.interactionContainer}>
           <TouchableOpacity
-            style={styles.interactionButton}
+            style={conectate_styles.interactionButton}
             onPress={() => handleReaction(item.id_contenido)}
           >
             <FontAwesome
@@ -462,17 +434,17 @@ export default function Conectate() {
                   : '#000'
               }
             />
-            <Text style={styles.interactionText}>
+            <Text style={conectate_styles.interactionText}>
               {item.reacciones?.length || 0} Me Encanta
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.interactionButton}
+            style={conectate_styles.interactionButton}
             onPress={() => handleComment(item.id_contenido)}
           >
             <FontAwesome name="comment-o" size={20} color="#007BFF" />
-            <Text style={styles.interactionText}>Comentar</Text>
+            <Text style={conectate_styles.interactionText}>Comentar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -523,8 +495,8 @@ export default function Conectate() {
         ListFooterComponent={loading ? <LoadingSpinner /> : null}
         ListEmptyComponent={
           !loading ? (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>
+            <View style={conectate_styles.emptyContainer}>
+              <Text style={conectate_styles.emptyText}>
                 No hay publicaciones disponibles.
               </Text>
             </View>
@@ -636,7 +608,7 @@ export default function Conectate() {
                 <View style={noticias_styles.commentContainer}>
                   <Image
                     source={{ uri: item.fotoPerfil }}
-                    style={styles.profileImage}
+                    style={conectate_styles.profileImage}
                   />
                   <Text style={noticias_styles.username}>{item.usuario}</Text>
                   <Text style={noticias_styles.commentText}>
@@ -714,59 +686,3 @@ export default function Conectate() {
     </ImageBackground>
   )
 }
-
-const styles = StyleSheet.create({
-  profileImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  postContent: {
-    flex: 1,
-  },
-  author: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'red',
-  },
-  createPostButton: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    margin: 10,
-  },
-  createPostText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: 'white',
-  },
-  // Estilos existentes...
-
-  interactionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
-  interactionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  interactionText: {
-    marginLeft: 5,
-    color: '#007BFF',
-    fontSize: 14,
-  },
-})
