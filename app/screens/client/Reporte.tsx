@@ -18,7 +18,6 @@ import { Picker } from '@react-native-picker/picker'
 import MapView, { Marker } from 'react-native-maps'
 import CustomModal from '@/app/components/customModal'
 import useMediaAndLocation from '@/app/hooks/useMediaAndLocation'
-
 //styles
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
@@ -42,7 +41,6 @@ interface Reporte {
   dependencia: string
   id_dependencia: string
 }
-
 export default function Reporte() {
   const router = useRouter() // ✅ Reemplazo de `navigation`
   const params = useLocalSearchParams()

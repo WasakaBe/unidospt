@@ -14,17 +14,14 @@ import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Ionicons } from '@expo/vector-icons'
 import { BlurView } from 'expo-blur'
-import login_styles from '@/app/styles/loginStyle'
-import { validatePassword, validatePhone } from '@/app/constants/validations'
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import CustomModal from '@/app/components/customModal'
-
-interface LoginProps {
-  onLogin?: (phone: string, password: string) => void
-  onForgotPassword?: () => void
-  onCreateAccount?: () => void
-}
+import { validatePassword, validatePhone } from '@/app/constants/validations'
+//styles
+import login_styles from '@/app/styles/loginStyle'
+//interfaces
+import { LoginProps } from '@/app/utils/interface'
 
 const Login: React.FC<LoginProps> = ({
   onLogin,

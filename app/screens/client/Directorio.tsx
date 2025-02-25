@@ -15,27 +15,12 @@ import Banners from '@/app/components/banners'
 import { API_URL } from '@env'
 import LoadingSpinner from '@/app/components/loadingSpinner'
 import CustomModal from '@/app/components/customModal'
-
 //styles
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
 import directorio_styles from '@/app/styles/directorioStyle'
-interface TipoServicio {
-  id: number
-  nombre: string
-}
-
-interface DirectorioItem {
-  id: number
-  nombre: string
-  apellido_paterno?: string
-  apellido_materno?: string
-  foto_perfil?: string
-  nombre_servicio?: string
-  descripcion?: string
-  telefono?: string
-  direccion_usuario?: string
-}
+//interfaces
+import { TipoServicio, DirectorioItem } from '@/app/utils/interface'
 
 export default function Directorio() {
   const router = useRouter()

@@ -10,15 +10,8 @@ import {
 import { useRouter } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { MaterialIcons, Feather } from '@expo/vector-icons'
-
-interface HamburgerMenuProps {
-  idUsuario: number | null
-  idPartido: number | null
-  userName: string
-  userEmail: string
-  phoneNumber: string
-  userPhoto: string
-}
+//interfaces
+import { HamburgerMenuProps } from '../utils/interface'
 
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
   idUsuario,

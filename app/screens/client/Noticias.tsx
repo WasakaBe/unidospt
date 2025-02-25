@@ -28,24 +28,8 @@ import CustomModal from '@/app/components/customModal'
 //styles
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
-
-interface Noticia {
-  NoticiaID: number
-  Titulo: string
-  Descripcion: string
-  ImagenesAsociadas: string[]
-  TipoNoticia: string
-  NombrePartido: string
-  TotalComentarios: number
-  TotalReacciones: number
-  reacciones?: Reaccion[] // 🔹 Se tipa explícitamente
-}
-
-interface Reaccion {
-  id_usuario: number
-  tipo_reaccion: string
-}
-
+//interfaces
+import { Noticia, Reaccion } from '@/app/utils/interface'
 export default function Noticias() {
   const router = useRouter() // ✅ Reemplazo de `navigation`
   const params = useLocalSearchParams()

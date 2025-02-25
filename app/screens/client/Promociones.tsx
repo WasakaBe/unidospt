@@ -13,20 +13,12 @@ import LoadingSpinner from '@/app/components/loadingSpinner'
 import Banners from '@/app/components/banners'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { API_URL } from '@env'
-
 //styles
 import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
 import promocion_styles from '@/app/styles/promocionesStyle'
-
-type Promo = {
-  idPromocion: number
-  logo: string
-  nombreNegocio: string
-  tituloPromocion: string
-  descripcionPromocion: string
-  detalles: string
-}
+//interfaces
+import { Promo } from '@/app/utils/interface'
 
 export default function Promociones() {
   const router = useRouter() // ✅ Reemplazo de `navigation`

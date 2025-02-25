@@ -3,19 +3,15 @@ import {
   View,
   Image,
   StyleSheet,
-  ActivityIndicator,
   ScrollView,
   Dimensions,
   Text,
 } from 'react-native'
 import { API_URL } from '@env'
 import { connectSocket, leaveRoom } from '../auth/socket'
-
-type Banner = {
-  id_imagen: number
-  fecha_subida: string
-  ruta_imagen: string
-}
+import LoadingSpinner from './loadingSpinner'
+//interface
+import { Banner } from '../utils/interface'
 
 const { width } = Dimensions.get('window')
 
@@ -92,7 +88,7 @@ export default function Banners({ idPartido }: { idPartido: number }) {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#1E88E5" />
+        <LoadingSpinner text="Cargando Banners..." color="#1E88E5" />
       </View>
     )
   }

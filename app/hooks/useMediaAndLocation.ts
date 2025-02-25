@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import * as Location from 'expo-location'
-
-interface LocationData {
-  latitude: number
-  longitude: number
-}
+//interfaces
+import { LocationData } from '../utils/interface'
 
 export default function useMediaAndLocation() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)

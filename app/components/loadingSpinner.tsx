@@ -9,11 +9,8 @@ import {
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { BlurView } from 'expo-blur'
-
-interface LoadingSpinnerProps {
-  text?: string
-  color?: string
-}
+//interfaces
+import { LoadingSpinnerProps } from '../utils/interface'
 
 const { width } = Dimensions.get('window')
 

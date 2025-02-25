@@ -31,30 +31,8 @@ import dashboard_styles from '@/app/styles/dashboardStyle'
 import noticias_styles from '@/app/styles/noticiasStyle'
 import reporte_styles from '@/app/styles/reporteStyle'
 import conectate_styles from '@/app/styles/conectateStyle'
-
-interface Post {
-  id_contenido: number
-  usuario: string
-  descripcion: string
-  fecha_publicacion: string
-  foto_perfil: string
-  nombre_partido: string
-  ruta_imagen: string
-  id_partido: number
-  usuario_reaccion: string | null // Campo de la API
-  tipo_reaccion: string | null // Campo de la API
-  reacciones: { tipo_reaccion: string; id_usuario: number }[] // Campo adicional para el frontend
-}
-
-interface Comment {
-  id: number
-  id_contenido: number
-  usuario: string
-  fotoPerfil: string
-  comentario: string
-  fecha_comentario: string
-  tiempo_transcurrido: string
-}
+//interfaces
+import { Post, Comment } from '@/app/utils/interface'
 
 export default function Conectate() {
   const router = useRouter()
@@ -75,7 +53,6 @@ export default function Conectate() {
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [hasMorePosts, setHasMorePosts] = useState(true)
-  const [bannedModalVisible, setBannedModalVisible] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [postText, setPostText] = useState('')
   const limit = 10

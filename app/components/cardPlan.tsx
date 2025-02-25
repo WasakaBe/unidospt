@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native'
+import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 
 const { width } = Dimensions.get('window')
 

@@ -7,19 +7,18 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  StyleSheet,
-  Alert,
 } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import getBackgroundByIdPartido from '@/app/constants/fondoPartidos'
-import dashboard_styles from '@/app/styles/dashboardStyle'
-import noticias_styles from '@/app/styles/noticiasStyle'
-import perfil_styles from '@/app/styles/perfilStyle'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import CustomModal from '@/app/components/customModal'
 import useMediaAndLocation from '@/app/hooks/useMediaAndLocation'
+//styles
+import dashboard_styles from '@/app/styles/dashboardStyle'
+import noticias_styles from '@/app/styles/noticiasStyle'
+import perfil_styles from '@/app/styles/perfilStyle'
 export default function Perfil() {
   const router = useRouter()
   const params = useLocalSearchParams()
@@ -242,6 +241,7 @@ export default function Perfil() {
             <Text style={perfil_styles.label}>Teléfono</Text>
             <TextInput
               style={perfil_styles.input}
+              editable={false}
               value={userInfo.telefono}
               keyboardType="phone-pad"
               onChangeText={(text) =>

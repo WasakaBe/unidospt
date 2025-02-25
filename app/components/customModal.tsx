@@ -12,16 +12,9 @@ import {
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons'
-
+//interfaces
+import { CustomModalProps } from '../utils/interface'
 const { width } = Dimensions.get('window')
-
-interface CustomModalProps {
-  visible: boolean
-  type: 'success' | 'error' | 'ban'
-  message: string
-  onClose: () => void
-  duration?: number
-}
 
 const getModalConfig = (type: 'success' | 'error' | 'ban') => {
   switch (type) {
