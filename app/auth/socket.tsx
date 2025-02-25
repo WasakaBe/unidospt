@@ -27,7 +27,7 @@ export const connectSocket = (idPartido?: number): Socket => {
     })
 
     socket.on('connect_error', (error: Error) => {
-      console.error(`⚠️ Error de conexión con Socket.io: ${error.message}`)
+      console.log(`⚠️ Error de conexión con Socket.io: ${error.message}`)
     })
   }
 

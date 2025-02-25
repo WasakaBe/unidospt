@@ -36,6 +36,3 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
-
-#se oculta para evitar que se suban las variables de entorno
-.env

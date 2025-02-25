@@ -325,7 +325,7 @@ export default function Conectate() {
     setComments([])
     try {
       const response = await fetch(
-        `${API_URL}api/post/comentarios/${postId}?page=1&limit=10`,
+        `${API_URL}api/post/comentarios/${postId}?page=1&limit=99999999`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -333,17 +333,19 @@ export default function Conectate() {
       )
       if (response.ok) {
         const data = await response.json()
-        // Se asume que la respuesta tiene una propiedad "comentarios"
-        // Se asume que la respuesta tiene una propiedad "comentarios"
-        const sortedComments = (data.comentarios as Comment[]).sort(
-          (a: Comment, b: Comment) => {
-            return (
+        // Verificar que la respuesta contenga comentarios
+        if (data.comentarios && Array.isArray(data.comentarios)) {
+          // Ordenar los comentarios desde el más reciente hasta el más antiguo
+          const sortedComments = data.comentarios.sort(
+            (a: Comment, b: Comment) =>
               new Date(b.fecha_comentario).getTime() -
               new Date(a.fecha_comentario).getTime()
-            )
-          }
-        )
-        setComments(sortedComments)
+          )
+
+          setComments(sortedComments)
+        } else {
+          console.log('No hay comentarios disponibles.')
+        }
       } else {
         console.log('Error al obtener comentarios')
       }

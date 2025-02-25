@@ -146,8 +146,10 @@ const Login: React.FC<LoginProps> = ({
 
       // Guardar token en AsyncStorage
       await AsyncStorage.setItem('userToken', data.token)
+
       console.log('✅ Inicio de sesión exitoso:', data.token)
       console.log('🏛️ Usuario pertenece al partido:', data.idPartido)
+      console.log('🏛️ Usuario pertenece al usuario:', data.idUsuario)
 
       // Mostrar modal de éxito
       setModalConfig({
@@ -162,11 +164,12 @@ const Login: React.FC<LoginProps> = ({
         router.replace('/screens/client/Dashboard') // Redirigir al Dashboard
       }, 1500)
     } catch (error: any) {
-      setModalConfig({
-        visible: true,
-        type: 'error',
-        message: error.message || 'Error en el inicio de sesión.',
-      })
+      console.log(error.message || 'Error en el inicio de sesión.'),
+        setModalConfig({
+          visible: true,
+          type: 'error',
+          message: 'Error en el inicio de sesión.',
+        })
     } finally {
       setLoading(false)
     }
