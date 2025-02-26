@@ -124,34 +124,53 @@ export default function PasswordRecovery() {
       return
     }
 
+    // Verificar que el token sea un número de 6 dígitos
+    if (!/^\d{6}$/.test(token)) {
+      showModal('error', 'El token debe ser un número de 6 dígitos.')
+      return
+    }
+
     setLoading(true)
 
     try {
+      console.log('🔹 Enviando solicitud de validación con el token:', token)
+
+      const requestBody = useEmail
+        ? { email: inputValue, token: token.replace(/\s+/g, '').trim() }
+        : { telefono: inputValue, token: token.replace(/\s+/g, '').trim() }
+
       const response = await fetch(
         `${API_URL}api/userspartido/validate-token`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: useEmail ? inputValue : null,
-            telefono: useEmail ? null : inputValue,
-            token,
-          }),
+          body: JSON.stringify(requestBody),
         }
       )
+      console.log('📌 Enviando requestBody:', JSON.stringify(requestBody))
 
       const data = await response.json()
+      console.log('🔹 Respuesta del servidor:', data)
+
       if (response.ok) {
         showModal(
           'success',
           'Token validado correctamente. Ahora ingresa tu nueva contraseña.'
         )
-        setStep(3) // Avanzar al paso de cambiar contraseña
+        setStep(3) // Avanzar al paso de cambio de contraseña
       } else {
-        showModal('error', data.message || 'Token incorrecto o expirado.')
+        if (data.message.includes('expirado')) {
+          showModal('error', 'El token ha expirado. Solicita uno nuevo.')
+        } else {
+          showModal('error', data.message || 'Código incorrecto o inválido.')
+        }
       }
     } catch (error) {
-      console.log('Error', 'No se pudo conectar con el servidor.')
+      console.error('❌ Error en la validación del token:', error)
+      showModal(
+        'error',
+        'No se pudo conectar con el servidor. Intenta de nuevo más tarde.'
+      )
     } finally {
       setLoading(false)
     }
@@ -259,7 +278,7 @@ export default function PasswordRecovery() {
                     placeholderTextColor="#aaa"
                     keyboardType="numeric"
                     value={token}
-                    onChangeText={setToken}
+                    onChangeText={(text) => setToken(text.replace(/\s+/g, ''))}
                   />
                 ) : (
                   <>

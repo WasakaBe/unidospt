@@ -204,7 +204,7 @@ export default function ConsultarSaldo() {
             color={customColors.blue}
             style={consulta_saldo_styles.progressBar}
           />
-          <Text style={consulta_saldo_styles.usageText}>{Totalgb}</Text>
+          <Text style={consulta_saldo_styles.usageText}>{Totalgb} GB</Text>
 
           {/* SMS */}
           <Ionicons name="chatbox" size={24} color="#000" />

@@ -323,7 +323,7 @@ export default function Dashboard() {
             onPress={() => {
               if (idUsuario && idPartido) {
                 router.push({
-                  pathname: '/screens/client/Recargas',
+                  pathname: '/screens/client/Recargas2',
                   params: {
                     idUsuario: idUsuario.toString(),
                     idPartido: idPartido.toString(),
