@@ -205,7 +205,7 @@ export default function Conectate() {
   }
 
   const handleReaction = async (postId: number) => {
-    const tipo_reaccion = 'meencanta' // Puedes cambiar esto según el tipo de reacción
+    const tipo_reaccion = 'me_encanta' // Puedes cambiar esto según el tipo de reacción
     const id_usuario = idUsuario
 
     if (!id_usuario) {
