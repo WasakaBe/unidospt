@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRouter, useLocalSearchParams } from 'expo-router'
@@ -128,93 +129,100 @@ export default function Promociones() {
         />
       </View>
 
-      <View style={promocion_styles.container}>
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
-          promociones.map((promo) => (
-            <View
-              key={promo.idPromocion}
-              style={promocion_styles.ticketContainer}
-            >
-              <View style={promocion_styles.ticketEdge}>
-                {[...Array(3)].map((_, i) => (
-                  <View key={`left-${i}`} style={promocion_styles.toothLeft} />
-                ))}
-              </View>
-
-              <View style={promocion_styles.mainContent}>
-                <View style={promocion_styles.header}>
-                  {promo.logo ? (
-                    <Image
-                      source={{ uri: promo.logo }}
-                      style={{ width: 40, height: 40, resizeMode: 'contain' }}
+      <ScrollView>
+        <View style={promocion_styles.container}>
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            promociones.map((promo) => (
+              <View
+                key={promo.idPromocion}
+                style={promocion_styles.ticketContainer}
+              >
+                <View style={promocion_styles.ticketEdge}>
+                  {[...Array(3)].map((_, i) => (
+                    <View
+                      key={`left-${i}`}
+                      style={promocion_styles.toothLeft}
                     />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name="calendar"
-                      size={18}
-                      color="#666"
-                    />
-                  )}
-
-                  <Text style={promocion_styles.restaurantName}>
-                    {promo.nombreNegocio}
-                  </Text>
+                  ))}
                 </View>
 
-                {/* Línea separadora */}
-                <View style={promocion_styles.separatorTop} />
+                <View style={promocion_styles.mainContent}>
+                  <View style={promocion_styles.header}>
+                    {promo.logo ? (
+                      <Image
+                        source={{ uri: promo.logo }}
+                        style={{ width: 40, height: 40, resizeMode: 'contain' }}
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="calendar"
+                        size={18}
+                        color="#666"
+                      />
+                    )}
 
-                <View style={promocion_styles.promoContainer}>
-                  <Text style={promocion_styles.promoTitle}>
-                    {promo.tituloPromocion}
-                  </Text>
-
-                  <Text style={promocion_styles.promoDescription}>
-                    {promo.detalles}
-                  </Text>
-                </View>
-                {/* Línea separadora */}
-                <View style={promocion_styles.separatorTop} />
-                <View style={promocion_styles.detailsContainer}>
-                  <View style={promocion_styles.dateInfo}>
-                    <MaterialCommunityIcons
-                      name="calendar"
-                      size={18}
-                      color="#666"
-                    />
-                    <Text style={promocion_styles.dateText}>
-                      Valido : {promo.descripcionPromocion}
+                    <Text style={promocion_styles.restaurantName}>
+                      {promo.nombreNegocio}
                     </Text>
                   </View>
-                  <TouchableOpacity
-                    style={promocion_styles.button}
-                    onPress={() => {
-                      setSelectedPromo(promo)
-                      setModalVisible(true)
-                      registerClick(promo.idPromocion)
-                    }}
-                  >
-                    <Text style={promocion_styles.buttonText}>PEDIR AHORA</Text>
-                  </TouchableOpacity>
+
+                  {/* Línea separadora */}
+                  <View style={promocion_styles.separatorTop} />
+
+                  <View style={promocion_styles.promoContainer}>
+                    <Text style={promocion_styles.promoTitle}>
+                      {promo.tituloPromocion}
+                    </Text>
+
+                    <Text style={promocion_styles.promoDescription}>
+                      {promo.detalles}
+                    </Text>
+                  </View>
+                  {/* Línea separadora */}
+                  <View style={promocion_styles.separatorTop} />
+                  <View style={promocion_styles.detailsContainer}>
+                    <View style={promocion_styles.dateInfo}>
+                      <MaterialCommunityIcons
+                        name="calendar"
+                        size={18}
+                        color="#666"
+                      />
+                      <Text style={promocion_styles.dateText}>
+                        Valido : {promo.descripcionPromocion}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={promocion_styles.button}
+                      onPress={() => {
+                        setSelectedPromo(promo)
+                        setModalVisible(true)
+                        registerClick(promo.idPromocion)
+                      }}
+                    >
+                      <Text style={promocion_styles.buttonText}>
+                        PEDIR AHORA
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={promocion_styles.separator} />
                 </View>
 
-                <View style={promocion_styles.separator} />
+                <View style={promocion_styles.ticketEdge}>
+                  {[...Array(3)].map((_, i) => (
+                    <View
+                      key={`right-${i}`}
+                      style={promocion_styles.toothRight}
+                    />
+                  ))}
+                </View>
               </View>
-
-              <View style={promocion_styles.ticketEdge}>
-                {[...Array(3)].map((_, i) => (
-                  <View
-                    key={`right-${i}`}
-                    style={promocion_styles.toothRight}
-                  />
-                ))}
-              </View>
-            </View>
-          ))
-        )}
-      </View>
+            ))
+          )}
+        </View>
+      </ScrollView>
 
       <Modal
         animationType="slide"

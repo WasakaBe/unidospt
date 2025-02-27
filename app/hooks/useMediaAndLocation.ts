@@ -19,6 +19,7 @@ export default function useMediaAndLocation() {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      aspect: [4, 5],
       quality: 1,
     })
 
@@ -38,6 +39,7 @@ export default function useMediaAndLocation() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      aspect: [4, 5],
       quality: 1,
     })
 
